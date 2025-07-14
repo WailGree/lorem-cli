@@ -6,6 +6,8 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -45,10 +47,10 @@ jobs:
         run: cargo build --release
 
       - name: Build for macOS
-        run: cargo build --target x86_64-apple-darwin --release --verbose
+        run: cargo build --target x86_64-apple-darwin --release
 
       - name: Build for macOS ARM64
-        run: cargo build --target aarch64-apple-darwin --release --verbose
+        run: cargo build --target aarch64-apple-darwin --release
 
       - name: Build for Windows
         run: cargo build --target x86_64-pc-windows-gnu --release
