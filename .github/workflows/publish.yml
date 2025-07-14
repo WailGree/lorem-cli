@@ -58,7 +58,7 @@ jobs:
           CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER: x86_64-w64-mingw32-gcc
 
       - name: Upload Release Assets
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2.2.2
         with:
           files: |
             target/release/lorem-cli
