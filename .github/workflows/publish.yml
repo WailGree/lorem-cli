@@ -57,13 +57,20 @@ jobs:
         env:
           CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER: x86_64-w64-mingw32-gcc
 
+      - name: Rename binaries for release
+        run: |
+          mv target/release/lorem-cli lorem-cli-linux-amd64
+          mv target/x86_64-apple-darwin/release/lorem-cli lorem-cli-macos-amd64
+          mv target/aarch64-apple-darwin/release/lorem-cli lorem-cli-macos-arm64
+          mv target/x86_64-pc-windows-gnu/release/lorem-cli.exe lorem-cli-windows-amd64.exe
+
       - name: Upload Release Assets
-        uses: softprops/action-gh-release@v2.2.2
+        uses: softprops/action-gh-release@v2
         with:
           files: |
-            target/release/lorem-cli
-            target/x86_64-apple-darwin/release/lorem-cli
-            target/aarch64-apple-darwin/release/lorem-cli
-            target/x86_64-pc-windows-gnu/release/lorem-cli.exe
+            lorem-cli-linux-amd64
+            lorem-cli-macos-amd64
+            lorem-cli-macos-arm64
+            lorem-cli-windows-amd64.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
