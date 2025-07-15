@@ -11,6 +11,33 @@ A Rust CLI tool for generating lorem ipsum text with customizable units and coun
 
 ## Installation
 
+### Prebuilt Binaries (GitHub Releases)
+
+Download the latest release for your platform from the [GitHub Releases page](https://github.com/XavierFabregat/lorem-cli/releases):
+
+- **Linux:** `lorem-cli-linux-amd64`
+- **macOS (Intel):** `lorem-cli-macos-amd64`
+- **macOS (Apple Silicon):** `lorem-cli-macos-arm64`
+- **Windows:** `lorem-cli-windows-amd64.exe`
+
+1. Download the appropriate binary for your OS and architecture.
+2. (Linux/macOS) Make it executable:
+   ```bash
+   chmod +x lorem-cli-*
+   ```
+3. (Optional) Move it to a directory in your PATH, e.g.:
+   ```bash
+   sudo mv lorem-cli-linux-amd64 /usr/local/bin/lorem-cli
+   ```
+
+### Using Cargo (crates.io)
+
+Install directly from [crates.io](https://crates.io/crates/lorem-cli):
+
+```bash
+cargo install lorem-cli
+```
+
 ### From Source
 
 1. Clone the repository
@@ -20,12 +47,6 @@ A Rust CLI tool for generating lorem ipsum text with customizable units and coun
    cargo build --release
    ```
 4. The binary will be available at `target/release/lorem-cli`
-
-### Using Cargo
-
-```bash
-cargo install --path .
-```
 
 ## Usage
 
@@ -39,7 +60,16 @@ lorem-cli
 
 ### Command Line Options
 
-- `-u, --unit <UNIT>`: Type of unit to count (word, sentence, paragraph) [default: sentence]
+- `-u, --unit <UNIT>`: Type of unit to count. Valid values:
+
+  | Long      | Short |
+  | --------- | ----- |
+  | word      | w     |
+  | sentence  | s     |
+  | paragraph | p     |
+
+  [default: sentence]
+
 - `-c, --count <COUNT>`: Number of units to generate [default: 1]
 - `-h, --help`: Print help information
 - `-V, --version`: Print version information
@@ -50,26 +80,32 @@ Generate 5 words:
 
 ```bash
 lorem-cli --unit word --count 5
+lorem-cli --unit w --count 5
 ```
 
 Generate 3 sentences:
 
 ```bash
 lorem-cli --unit sentence --count 3
+lorem-cli --unit s --count 3
 ```
 
 Generate 2 paragraphs:
 
 ```bash
 lorem-cli --unit paragraph --count 2
+lorem-cli --unit p --count 2
 ```
 
 Using short flags:
 
 ```bash
 lorem-cli -u word -c 10
+lorem-cli -u w -c 10
 lorem-cli -u sentence -c 2
+lorem-cli -u s -c 2
 lorem-cli -u paragraph -c 1
+lorem-cli -u p -c 1
 ```
 
 ## Output Examples
@@ -102,4 +138,4 @@ sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium dolor
 
 ## License
 
-This project is open source and available under the MIT License.
+This project is open source and available under the MIT OR Apache-2.0 License.
