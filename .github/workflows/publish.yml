@@ -1,0 +1,76 @@
+name: Publish Rust Binary
+on:
+  push:
+    tags:
+      - 'v*'
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Install dependencies and configure linker
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mingw-w64 wget xz-utils
+          wget https://ziglang.org/download/0.11.0/zig-linux-x86_64-0.11.0.tar.xz
+          tar -xf zig-linux-x86_64-0.11.0.tar.xz
+          echo "$GITHUB_WORKSPACE/zig-linux-x86_64-0.11.0" >> $GITHUB_PATH
+          mkdir .cargo
+          echo '#!/bin/sh' > .cargo/x86_64-apple-darwin-linker.sh
+          echo 'exec zig cc -target x86_64-macos "$@"' >> .cargo/x86_64-apple-darwin-linker.sh
+          chmod +x .cargo/x86_64-apple-darwin-linker.sh
+          echo '#!/bin/sh' > .cargo/aarch64-apple-darwin-linker.sh
+          echo 'exec zig cc -target aarch64-macos "$@"' >> .cargo/aarch64-apple-darwin-linker.sh
+          chmod +x .cargo/aarch64-apple-darwin-linker.sh
+          echo '[target.x86_64-apple-darwin]' >> .cargo/config.toml
+          echo 'linker = ".cargo/x86_64-apple-darwin-linker.sh"' >> .cargo/config.toml
+          echo '[target.aarch64-apple-darwin]' >> .cargo/config.toml
+          echo 'linker = ".cargo/aarch64-apple-darwin-linker.sh"' >> .cargo/config.toml
+
+      - name: Install cross-compilation targets
+        run: |
+          rustup target add x86_64-apple-darwin
+          rustup target add aarch64-apple-darwin
+          rustup target add x86_64-pc-windows-gnu
+
+      - name: Build for Linux
+        run: cargo build --release
+
+      - name: Build for macOS
+        run: cargo build --target x86_64-apple-darwin --release
+
+      - name: Build for macOS ARM64
+        run: cargo build --target aarch64-apple-darwin --release
+
+      - name: Build for Windows
+        run: cargo build --target x86_64-pc-windows-gnu --release
+        env:
+          CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER: x86_64-w64-mingw32-gcc
+
+      - name: Rename binaries for release
+        run: |
+          mv target/release/lorem-cli lorem-cli-linux-amd64
+          mv target/x86_64-apple-darwin/release/lorem-cli lorem-cli-macos-amd64
+          mv target/aarch64-apple-darwin/release/lorem-cli lorem-cli-macos-arm64
+          mv target/x86_64-pc-windows-gnu/release/lorem-cli.exe lorem-cli-windows-amd64.exe
+
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            lorem-cli-linux-amd64
+            lorem-cli-macos-amd64
+            lorem-cli-macos-arm64
+            lorem-cli-windows-amd64.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
