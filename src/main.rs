@@ -17,8 +17,11 @@ struct Args {
 
 #[derive(ValueEnum, Clone, Debug)]
 enum Unit {
+    #[clap(alias = "w")]
     Word,
+    #[clap(alias = "s")]
     Sentence,
+    #[clap(alias = "p")]
     Paragraph,
 }
 
