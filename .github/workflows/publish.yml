@@ -72,5 +72,6 @@ jobs:
             lorem-cli-macos-amd64
             lorem-cli-macos-arm64
             lorem-cli-windows-amd64.exe
+          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
