@@ -11,3 +11,10 @@ license = "MIT OR Apache-2.0"
 clap = { version = "4.6", features = ["derive"] }
 anyhow = "1.0"
 fastrand = "2.5"
+
+[profile.release]
+opt-level = 3       # max speed (speed > size)
+lto = "fat"         # full cross-crate link-time optimization
+strip = true        # strip symbols, much smaller binary
+codegen-units = 1   # slower compile, better optimization
+panic = "abort"     # no unwind machinery: smaller and slightly faster
