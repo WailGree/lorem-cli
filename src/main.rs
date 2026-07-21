@@ -159,52 +159,51 @@ fn main() -> Result<()> {
 fn generate_lorem_ipsum(unit: &Unit, count: usize) -> Result<String> {
     match unit {
         Unit::Word => {
-            let mut words = Vec::new();
-            for _ in 0..count {
-                let word = WORDS[fastrand::usize(..WORDS.len())];
-                words.push(word);
-            }
-            Ok(words.join(" "))
+            Ok(generate_words(count).join(" "))
         }
         Unit::Sentence => {
-            let mut sentences = Vec::new();
-            for _ in 0..count {
-                let sentence_length = fastrand::usize(5..15);
-                let mut sentence_words = Vec::new();
-
-                for _ in 0..sentence_length {
-                    let word = WORDS[fastrand::usize(..WORDS.len())];
-                    sentence_words.push(word);
-                }
-
-                let sentence = sentence_words.join(" ");
-                sentences.push(sentence);
-            }
-            Ok(sentences.join(". ") + ".")
+            Ok(generate_sentences(count))
         }
         Unit::Paragraph => {
-            let mut paragraphs = Vec::new();
-            for _ in 0..count {
-                let paragraph_sentences = fastrand::usize(3..8);
-                let mut sentences = Vec::new();
-
-                for _ in 0..paragraph_sentences {
-                    let sentence_length = fastrand::usize(5..15);
-                    let mut sentence_words = Vec::new();
-
-                    for _ in 0..sentence_length {
-                        let word = WORDS[fastrand::usize(..WORDS.len())];
-                        sentence_words.push(word);
-                    }
-
-                    let sentence = sentence_words.join(" ");
-                    sentences.push(sentence);
-                }
-
-                let paragraph = sentences.join(". ") + ".";
-                paragraphs.push(paragraph);
-            }
-            Ok(paragraphs.join("\n\n"))
+            Ok(generate_paragraphs(count))
         }
     }
+}
+
+fn generate_words(count: usize) -> Vec<String> {
+    let mut words = Vec::new();
+    for _ in 0..count {
+        let word = WORDS[fastrand::usize(..WORDS.len())].to_owned();
+        words.push(word);
+    }
+
+    words
+}
+
+fn generate_sentences(count: usize) -> String {
+    let mut sentences = Vec::new();
+    for _ in 0..count {
+        let sentence_length = fastrand::usize(5..15);
+        let sentence_words = generate_words(sentence_length);
+
+        let sentence = sentence_words.join(" ");
+        sentences.push(sentence);
+    }
+
+    sentences.join(". ") + "."
+}
+
+fn generate_paragraphs(count: usize) -> String {
+    let mut paragraphs = Vec::new();
+    for _ in 0..count {
+        let paragraph_sentences = fastrand::usize(3..8);
+        let mut sentences = Vec::new();
+
+        sentences.push(generate_sentences(paragraph_sentences));
+
+        let paragraph = sentences.join(". ");
+        paragraphs.push(paragraph);
+    }
+
+    paragraphs.join("\n\n")
 }
