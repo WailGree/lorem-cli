@@ -105,10 +105,11 @@ fn generate_lorem_ipsum(unit: &Unit, count: usize) -> String {
     }
 }
 
-fn generate_words(count: usize) -> Vec<String> {
-    let mut words = Vec::new();
+fn generate_words(count: usize) -> Vec<&'static str> {
+    let mut words = Vec::with_capacity(count);
+
     for _ in 0..count {
-        let word = WORDS[fastrand::usize(..WORDS.len())].to_owned();
+        let word = WORDS[fastrand::usize(..WORDS.len())];
         words.push(word);
     }
 
@@ -116,7 +117,8 @@ fn generate_words(count: usize) -> Vec<String> {
 }
 
 fn generate_sentences(count: usize) -> String {
-    let mut sentences = Vec::new();
+    let mut sentences = Vec::with_capacity(count);
+
     for _ in 0..count {
         let sentence_length = fastrand::usize(5..15);
         let sentence_words = generate_words(sentence_length);
@@ -129,15 +131,12 @@ fn generate_sentences(count: usize) -> String {
 }
 
 fn generate_paragraphs(count: usize) -> String {
-    let mut paragraphs = Vec::new();
+    let mut paragraphs = Vec::with_capacity(count);
+
     for _ in 0..count {
         let paragraph_sentences = fastrand::usize(3..8);
-        let mut sentences = Vec::new();
-
-        sentences.push(generate_sentences(paragraph_sentences));
-
-        let paragraph = sentences.join(". ");
-        paragraphs.push(paragraph);
+        let sentences = generate_sentences(paragraph_sentences);
+        paragraphs.push(sentences);
     }
 
     paragraphs.join("\n\n")
