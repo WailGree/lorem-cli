@@ -9,7 +9,6 @@ license = "MIT OR Apache-2.0"
 
 [dependencies]
 clap = { version = "4.6", default-features = false, features = ["derive", "std"] }
-anyhow = "1.0"
 fastrand = "2.5"
 
 [profile.release]

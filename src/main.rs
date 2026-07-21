@@ -1,4 +1,3 @@
-use anyhow::Result;
 use clap::{Parser, ValueEnum};
 
 #[derive(Parser)]
@@ -147,25 +146,23 @@ static WORDS: &[&str] = &[
     "laborum",
 ];
 
-fn main() -> Result<()> {
+fn main() {
     let args = Args::parse();
 
-    let lorem_text = generate_lorem_ipsum(&args.unit, args.count)?;
+    let lorem_text = generate_lorem_ipsum(&args.unit, args.count);
     println!("{}", lorem_text);
-
-    Ok(())
 }
 
-fn generate_lorem_ipsum(unit: &Unit, count: usize) -> Result<String> {
+fn generate_lorem_ipsum(unit: &Unit, count: usize) -> String {
     match unit {
         Unit::Word => {
-            Ok(generate_words(count).join(" "))
+            generate_words(count).join(" ")
         }
         Unit::Sentence => {
-            Ok(generate_sentences(count))
+            generate_sentences(count)
         }
         Unit::Paragraph => {
-            Ok(generate_paragraphs(count))
+            generate_paragraphs(count)
         }
     }
 }
