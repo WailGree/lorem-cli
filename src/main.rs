@@ -93,11 +93,11 @@ static WORDS: &[&str] = &[
 fn main() {
     let args = Args::parse();
 
-    let lorem_text = generate_lorem_ipsum(&args.unit, args.count);
+    let lorem_text = generate_lorem_ipsum(args.unit, args.count);
     println!("{}", lorem_text);
 }
 
-fn generate_lorem_ipsum(unit: &Unit, count: usize) -> String {
+fn generate_lorem_ipsum(unit: Unit, count: usize) -> String {
     match unit {
         Unit::Word => generate_words(count).join(" "),
         Unit::Sentence => generate_sentences(count),
