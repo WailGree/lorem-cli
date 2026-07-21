@@ -155,15 +155,9 @@ fn main() {
 
 fn generate_lorem_ipsum(unit: &Unit, count: usize) -> String {
     match unit {
-        Unit::Word => {
-            generate_words(count).join(" ")
-        }
-        Unit::Sentence => {
-            generate_sentences(count)
-        }
-        Unit::Paragraph => {
-            generate_paragraphs(count)
-        }
+        Unit::Word => generate_words(count).join(" "),
+        Unit::Sentence => generate_sentences(count),
+        Unit::Paragraph => generate_paragraphs(count),
     }
 }
 
